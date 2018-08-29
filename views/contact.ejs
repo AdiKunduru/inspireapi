@@ -11,7 +11,7 @@
   <% } %>
 </div>
 
-<form method="post" action="/contact" novalidate>
+<form method="post" action="/" novalidate>
   <div class="form-field <%= errors.message ? 'form-field-invalid' : '' %>">
     <label for="message">Secret Key</label>
     <textarea class="input" id="message" name="message" rows="1" autofocus><%= data.message %></textarea>

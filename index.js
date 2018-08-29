@@ -32,16 +32,14 @@ var jwt  = require('./jwt');
 var data = require('./data')
 
 
-
-
-app.get('/contact', function(req, res) {
+app.get('/', function(req, res) {
     res.render('contact' , {
     data: {},
     errors: {}
   })
 });
 
-app.post('/contact', [
+app.post('/', [
   check('message')
     .isLength({ min: 1 })
     .trim()
@@ -55,51 +53,22 @@ app.post('/contact', [
     })
   }
 
-  const data = matchedData(req)
+   const post = matchedData(req)
+   var secret = post.message
 
-   var secret = data.message
-
- 	var request = new sql.Request();
-           
-        // query to the database and get the records
-    request.query('select' + secret + ' from SECRETKEYTABLE', function (err, recordset) {
+   //check secret and redirect
+    data.checkSecret(); 	
             
-            
-
-         if(recordset.length > 0)
-
-
-           res.redirect('/authenticate?secret=' + secret)
-            
-        });
-
-   
 })
 
 
 app.get('/authenticate' , function(req,res){
 //??Payload and supersecret
-	payload = 
-	{
-	  name:"xxxx",
-	  password:"xxxx"
-	}
 	
-	//supersecret = req.query.secret
-	//Determine if supersecret key is a real key
-
-	jwt.giveToken(res,payload) 
-})
-
-
-app.get('/login', function(req,res){
-	
-	//localhost:8080/login?token=example 
-
-	 myToken = req.query.token
-
-	 jwt.signing(res,myToken);
-
+	/*supersecret = req.query.secret
+	if(supersecret == null){throw error}
+    */
+	jwt.giveToken(res) 
 })
 
 
@@ -109,38 +78,15 @@ app.get('/student', function(req,res){
     //Send SQL callback that runs the command and sends it to res
 	myToken = req.query.token
 	student = req.query.student
-//getStudent(res,student)
-	if(jwt.signing(res,myToken,data.math())){
+
+	if(jwt.signing(res,myToken,data.getStudent(res,student))){
 		
 	}else{
-		res.send("didn work")
+		res.send("didn't work")
 	}
 
 	
 })
-
-/*
-
-app.get('/course', function(req,res){
-	
-
-
-	var request = new sql.Request();
-           
-        // query to the database and get the records
-    request.query('select' + secret + ' from SECRETKEYTABLE', function (err, recordset) {
-            
-            
-
-         if(recordset.length > 0)
-
-
-           res.redirect('/authenticate?secret=' + secret)
-            
-        });
-})
-*/
-
 
 
 

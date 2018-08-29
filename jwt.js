@@ -20,12 +20,13 @@ jwt.verify(myToken, 'supersecret', function(err, decoded) {
 
 },
 
-giveToken : function(res,payload) {
+giveToken : function(res) {
 
+payload =  {} 
+  
 	var token = jwt.sign(payload, "supersecret", {
           expiresIn: 1440 // expires in 24 hours
         });
-
 
         // return the information including token as JSON
         res.json({

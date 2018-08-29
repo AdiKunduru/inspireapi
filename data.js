@@ -1,42 +1,52 @@
 
- //var sql = require("mssql");
-
-    // config for your database
-    var config = {
-        user: 'sa',
-        password: 'mypassword',
-        server: 'localhost', 
-        database: 'SchoolDB' 
+var mssql = require("mssql"); 
+  var dbconfig = {
+        user: 'inspirelcms_demo',
+        password: 'Fyx22x!1',
+        server: 'jothan-dell2\\sqlexpress',
+        database: 'inspirelcms_demo'
     };
+
+    
+var connection = mssql.connect(dbConfig, function (err) {
+    if (err)
+        console.log(err); 
+});
 
 module.exports = {
 
-math : function(){
 
-	//SQL Commands here
-	return "this is my code";
+checkSecret : function(res,secret){
 
-},
+    var request = new mssql.Request();
 
+    request.query('select ' + secret 'from SECRETKEYS??', function (err, recordset) {
 
-getStudent : function(student){
+        if (err) console.log(err)
+            if(recordset.length == 0 ?? recordset != null)
 
-	sql.connect(config, function (err) {
-
-		var request = new sql.Request();
-		 request.query('select' + student + ' from STUDENTTABLE', function (err, recordset) {
-         
-         //If there is a student in the Table
-         if(recordset.length > 0){
-         	return recordset
-         }
-         else{
-         	//Insert Appropriate error message here
-         	return ("error message")
-         }
+            else{
+                res.redirect('/authenticate?secret=' + secret)
+            }
+          
+                sql.close();
         });
-	})
 },
+
+
+getStudent : function(res,student){
+
+        var request = new mssql.Request();
+
+        request.query('select * from Students', function (err, recordset) {
+
+            if (err) console.log(err)
+
+          res.send(recordset);
+
+                sql.close();
+        });
+}
 
 
 
